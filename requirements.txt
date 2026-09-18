@@ -1,0 +1,6 @@
+# Phase 0-1: data acquisition and feature extraction
+numpy
+pandas
+pyarrow
+py2bit
+snakemake
