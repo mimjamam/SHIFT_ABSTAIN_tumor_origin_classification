@@ -13,7 +13,7 @@ TCGA_STUDIES = [
 
 rule all:
     input:
-        "data/processed/features.parquet",
+        "results/metrics_evaluation.json",
 
 
 rule fetch_reference:
@@ -82,3 +82,48 @@ rule build_features:
         "data/processed/features.parquet",
     shell:
         "python3 scripts/build_dataset.py"
+
+
+rule train_baseline:
+    input:
+        "data/processed/features.parquet",
+    output:
+        "results/metrics_baseline.json",
+    shell:
+        "python3 scripts/train_baseline.py"
+
+
+rule train_ensemble:
+    input:
+        "data/processed/features.parquet",
+    output:
+        "results/metrics_uncertainty.json",
+        "models/classes.json",
+        "models/scaler.npz",
+        expand("models/mlp_seed{seed}.pt", seed=range(5)),
+        expand("results/predictions/{split}.npz", split=["val", "test_exome_id", "test_panel_shifted"]),
+    shell:
+        "python3 scripts/train_ensemble.py"
+
+
+rule compute_thresholds:
+    input:
+        "results/metrics_uncertainty.json",
+    output:
+        "models/thresholds.json",
+    shell:
+        "python3 scripts/compute_thresholds.py"
+
+
+rule evaluate:
+    input:
+        "results/metrics_baseline.json",
+        "models/thresholds.json",
+    output:
+        "results/metrics_evaluation.json",
+        "results/accuracy_vs_coverage.csv",
+        "results/figures/risk_coverage_curves.png",
+        "results/figures/calibration.png",
+        "results/figures/aurc_comparison.png",
+    shell:
+        "python3 scripts/evaluate.py"

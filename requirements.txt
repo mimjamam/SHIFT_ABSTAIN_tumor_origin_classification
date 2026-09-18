@@ -14,3 +14,9 @@ torch
 
 # Phase 4: evaluation figures
 matplotlib
+
+# Phase 5: API + UI
+fastapi
+uvicorn
+python-multipart
+gradio
