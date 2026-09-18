@@ -4,3 +4,6 @@ pandas
 pyarrow
 py2bit
 snakemake
+
+# Phase 2: baseline models
+scikit-learn
