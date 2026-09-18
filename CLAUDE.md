@@ -70,3 +70,11 @@ Commit at the end of each phase.
 `docker run` gives a working demo, one command reproduces every figure, and
 the README states honestly how large the shift penalty was and how much
 abstention recovered.
+
+## Commit conventions
+Plain conventional-commit style. No attribution trailers (no
+`Co-Authored-By: Claude`, no "Generated with Claude Code" footers, no
+emoji), no marketing footer. Subject line under 72 characters, imperative
+mood (e.g. "Add retry logic", not "Added" or "Adding"). A
+`.git/hooks/commit-msg` hook in this repo strips any attribution lines
+that slip through as a belt-and-braces safeguard.
