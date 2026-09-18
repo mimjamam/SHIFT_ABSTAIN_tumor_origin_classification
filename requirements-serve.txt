@@ -1,0 +1,10 @@
+# Runtime dependencies for the API/UI demo only (see requirements.txt for
+# the full research/pipeline dependency set -- scikit-learn, matplotlib,
+# snakemake, etc. aren't needed to *serve* an already-trained model).
+numpy
+pandas
+py2bit
+fastapi
+uvicorn
+python-multipart
+gradio
