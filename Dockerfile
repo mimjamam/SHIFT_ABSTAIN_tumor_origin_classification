@@ -27,4 +27,6 @@ COPY models/ models/
 COPY results/figures/ results/figures/
 
 EXPOSE 8000
-CMD ["sh", "-c", "cd api && uvicorn main:app --host 0.0.0.0 --port 8000"]
+# PORT is injected by some hosting platforms (e.g. Render) to tell the
+# container which port to listen on; default to 8000 for local `docker run`.
+CMD ["sh", "-c", "cd api && uvicorn main:app --host 0.0.0.0 --port ${PORT:-8000}"]
