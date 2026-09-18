@@ -3,3 +3,7 @@ data/
 __pycache__/
 .venv/
 venv/
+
+# Regenerable raw prediction arrays (deterministic given fixed seeds);
+# results/*.json summaries and figures ARE committed, this is not.
+results/predictions/

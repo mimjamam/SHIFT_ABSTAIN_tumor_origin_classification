@@ -13,39 +13,14 @@ import json
 import os
 import sys
 
-import numpy as np
-import pandas as pd
 from sklearn.ensemble import HistGradientBoostingClassifier
 from sklearn.metrics import accuracy_score, f1_score
-from sklearn.model_selection import train_test_split
 from sklearn.neural_network import MLPClassifier
 from sklearn.pipeline import make_pipeline
 from sklearn.preprocessing import StandardScaler
 
-ROOT = os.path.join(os.path.dirname(__file__), "..")
-FEATURES_PATH = os.path.join(ROOT, "data", "processed", "features.parquet")
-RESULTS_DIR = os.path.join(ROOT, "results")
-SEED = 0
-
-
-def load_data():
-    df = pd.read_parquet(FEATURES_PATH)
-    feature_cols = [c for c in df.columns if c.startswith("sbs_") or c.startswith("driver_")] + ["tmb"]
-    return df, feature_cols
-
-
-def split_exome(df: pd.DataFrame, feature_cols: list[str]):
-    exome = df[df["cohort"] == "exome"]
-    X = exome[feature_cols].to_numpy(dtype=float)
-    y = exome["cancer_type"].to_numpy(dtype=str)
-
-    X_train, X_temp, y_train, y_temp = train_test_split(
-        X, y, test_size=0.30, stratify=y, random_state=SEED
-    )
-    X_val, X_test, y_val, y_test = train_test_split(
-        X_temp, y_temp, test_size=0.50, stratify=y_temp, random_state=SEED
-    )
-    return (X_train, y_train), (X_val, y_val), (X_test, y_test)
+sys.path.insert(0, os.path.dirname(__file__))
+from data import RESULTS_DIR, SEED, load_data, panel_split, split_exome
 
 
 def eval_split(name, model, X, y):
@@ -63,9 +38,7 @@ if __name__ == "__main__":
     (X_train, y_train), (X_val, y_val), (X_test, y_test) = split_exome(df, feature_cols)
     print(f"exome train/val/test sizes: {len(y_train)}/{len(y_val)}/{len(y_test)}")
 
-    panel = df[df["cohort"] == "panel"]
-    X_panel = panel[feature_cols].to_numpy(dtype=float)
-    y_panel = panel["cancer_type"].to_numpy(dtype=str)
+    X_panel, y_panel = panel_split(df, feature_cols)
     print(f"panel (shifted, held out entirely from training): {len(y_panel)}")
 
     results = {}

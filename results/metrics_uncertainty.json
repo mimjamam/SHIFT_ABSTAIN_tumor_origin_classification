@@ -1,0 +1,22 @@
+{
+  "n_ensemble": 5,
+  "n_mc_samples": 30,
+  "val": {
+    "n": 1232,
+    "single_model_accuracy": 0.6826298701298701,
+    "deep_ensemble_accuracy": 0.6777597402597403,
+    "mc_dropout_accuracy": 0.6834415584415584
+  },
+  "test_exome_id": {
+    "n": 1233,
+    "single_model_accuracy": 0.6853203568532036,
+    "deep_ensemble_accuracy": 0.6869424168694241,
+    "mc_dropout_accuracy": 0.683698296836983
+  },
+  "test_panel_shifted": {
+    "n": 7803,
+    "single_model_accuracy": 0.3094963475586313,
+    "deep_ensemble_accuracy": 0.3351275150583109,
+    "mc_dropout_accuracy": 0.30988081507112647
+  }
+}

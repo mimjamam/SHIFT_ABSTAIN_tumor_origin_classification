@@ -7,3 +7,7 @@ snakemake
 
 # Phase 2: baseline models
 scikit-learn
+
+# Phase 3: uncertainty (deep ensemble + MC-dropout MLP)
+# CPU-only build: pip install torch --index-url https://download.pytorch.org/whl/cpu
+torch
