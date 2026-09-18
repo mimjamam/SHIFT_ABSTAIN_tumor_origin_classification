@@ -129,12 +129,9 @@ Per-phase writeups with more detail and caveats: `docs/phase*.md`.
   driver-gene panel rather than the 30-gene subset used here) would
   likely improve both accuracy and calibration, in and out of
   distribution.
-- **The Docker image's build step could not be verified end-to-end in
-  this environment** (no Docker available) — it was instead validated by
-  installing the exact runtime dependency set (`requirements-serve.txt`)
-  into an isolated environment and confirming the server serves correct
-  predictions from it; the Docker build itself should be checked by
-  whoever has Docker available before relying on it.
+- The Docker image is 3.35GB, dominated by the 816MB reference genome and
+  the CPU-only PyTorch install — fine for a local demo, not optimized for
+  distribution.
 
 ## Running it
 

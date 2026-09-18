@@ -20,38 +20,36 @@
   against the actual saved metrics files line by line before writing),
   limitations, and run instructions.
 
-## Important honesty note: Docker was not runnable in this environment
+## Docker build/run verified end to end
 
-There is no Docker (or Podman) installed in this sandbox, and installing
-it requires root, which wasn't available. **The `docker build`/`docker
-run` path itself could not be executed and verified end-to-end here.**
+Docker wasn't installed in this sandbox initially and needed root, which
+required the user to install it out-of-band (`apt-get install docker.io`)
+and add the session's user to the `docker` group. Once available:
 
-What *was* verified, as the closest available substitute: a fresh,
-isolated Python environment was built with `uv venv`, installed with
-*exactly* `requirements-serve.txt` plus the CPU-only PyTorch wheel (the
-same two install steps the Dockerfile runs), and the API was started and
-exercised against real data from that environment alone --
+- Before Docker was available, the *dependency set* was verified by
+  proxy: a fresh, isolated Python environment installed with exactly
+  `requirements-serve.txt` plus the CPU-only PyTorch wheel served correct
+  predictions.
+- With Docker actually available, `docker build -t shift-abstain .` was
+  run for real (all 12 steps completed, image `shift-abstain:latest`,
+  3.35GB) and `docker run -d -p 8000:8000 shift-abstain` was started and
+  exercised directly:
+  - `GET /health` → 200
+  - `GET /ui` → 200 (after Gradio's own redirect)
+  - `POST /predict` with a real GBM exome MAF (395 samples) → identical
+    predictions to every earlier verification (sample `TCGA-02-0003-01`
+    → Glioma, confidence 0.7595, PREDICT)
 
-- `GET /health` → 200
-- `GET /ui` → 200 (after Gradio's own redirect)
-- `POST /predict` with a real GBM exome MAF (395 samples) → identical
-  predictions to the full dev environment (e.g. sample
-  `TCGA-02-0003-01` → Glioma, confidence 0.7595, PREDICT)
-
-This confirms the *dependency set* the Dockerfile installs is complete
-and sufficient to serve correct predictions. It does **not** confirm the
-Dockerfile's build steps themselves (base image, `apt-get`, `COPY` paths,
-the `hg19.2bit` curl step, the final `CMD`) are free of typos or
-environment-specific issues, since those can only be caught by an actual
-`docker build`. **Before relying on this for a real demo, run `docker
-build -t shift-abstain .` and `docker run -p 8000:8000 shift-abstain`
-yourself and confirm `http://localhost:8000` comes up.**
+The image is 3.35GB, dominated by the 816MB reference genome and the
+~1.1GB PyTorch CPU wheel plus its dependencies (numpy, etc. pulled in
+again inside the container even though the host already has them, since
+Docker images are isolated by design).
 
 ## Definition of done, honestly assessed
 
-- "`docker run` gives a working demo" — Dockerfile written and its
-  dependency set verified by proxy (above), but the actual `docker
-  build`/`run` commands are **unverified** in this environment.
+- "`docker run` gives a working demo" — **verified**: built and ran the
+  actual image, confirmed `/health`, `/ui`, and `/predict` all work
+  end-to-end with real data.
 - "one command reproduces every figure" — verified: `snakemake --cores 4
   all` (or `make`) runs the full pipeline from raw data download through
   `results/figures/*.png`, and every figure/metric currently in the repo
