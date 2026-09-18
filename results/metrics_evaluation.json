@@ -1,0 +1,82 @@
+{
+  "test_exome_id": {
+    "n": 1233,
+    "methods": {
+      "softmax_response": {
+        "aurc": 0.1136003064289125,
+        "selective_accuracy_at_80": 0.7738336713995944,
+        "selective_accuracy_at_90": 0.7288288288288288,
+        "selective_accuracy_at_95": 0.7122117847993168
+      },
+      "predictive_entropy": {
+        "aurc": 0.11668123840113206,
+        "selective_accuracy_at_80": 0.7758620689655172,
+        "selective_accuracy_at_90": 0.7252252252252253,
+        "selective_accuracy_at_95": 0.7122117847993168
+      },
+      "ensemble_disagreement": {
+        "aurc": 0.16258933978478723,
+        "selective_accuracy_at_80": 0.72920892494929,
+        "selective_accuracy_at_90": 0.7063063063063063,
+        "selective_accuracy_at_95": 0.695132365499573
+      },
+      "mc_dropout_disagreement": {
+        "aurc": 0.19836727327378562,
+        "selective_accuracy_at_80": 0.7139959432048681,
+        "selective_accuracy_at_90": 0.6918918918918919,
+        "selective_accuracy_at_95": 0.6917164816396243
+      }
+    },
+    "calibration": {
+      "single_model": {
+        "ece": 0.03297136813426347
+      },
+      "deep_ensemble": {
+        "ece": 0.03448420718300178
+      },
+      "mc_dropout": {
+        "ece": 0.07980049340490976
+      }
+    }
+  },
+  "test_panel_shifted": {
+    "n": 7803,
+    "methods": {
+      "softmax_response": {
+        "aurc": 0.5470829475655503,
+        "selective_accuracy_at_80": 0.3723165652034604,
+        "selective_accuracy_at_90": 0.3518439413356116,
+        "selective_accuracy_at_95": 0.34466477809254015
+      },
+      "predictive_entropy": {
+        "aurc": 0.5541674049863744,
+        "selective_accuracy_at_80": 0.37071451457866067,
+        "selective_accuracy_at_90": 0.35027765912003417,
+        "selective_accuracy_at_95": 0.342911102117901
+      },
+      "ensemble_disagreement": {
+        "aurc": 0.5595934448438711,
+        "selective_accuracy_at_80": 0.3569368792053829,
+        "selective_accuracy_at_90": 0.34856898761213156,
+        "selective_accuracy_at_95": 0.34223661135842437
+      },
+      "mc_dropout_disagreement": {
+        "aurc": 0.5987492696521742,
+        "selective_accuracy_at_80": 0.3357898109580263,
+        "selective_accuracy_at_90": 0.32350847216289336,
+        "selective_accuracy_at_95": 0.3168757588021044
+      }
+    },
+    "calibration": {
+      "single_model": {
+        "ece": 0.40351204361752735
+      },
+      "deep_ensemble": {
+        "ece": 0.2987334665355508
+      },
+      "mc_dropout": {
+        "ece": 0.23592505237658362
+      }
+    }
+  }
+}

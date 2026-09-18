@@ -11,3 +11,6 @@ scikit-learn
 # Phase 3: uncertainty (deep ensemble + MC-dropout MLP)
 # CPU-only build: pip install torch --index-url https://download.pytorch.org/whl/cpu
 torch
+
+# Phase 4: evaluation figures
+matplotlib
