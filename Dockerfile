@@ -13,9 +13,15 @@ RUN pip install --no-cache-dir -r requirements-serve.txt \
 # Reference genome for SBS-96 trinucleotide context lookups at inference
 # time (see docs/phase1_features.md). Fetched at build time so `docker run`
 # needs no network access and no pre-populated host data/ directory.
+# -f: fail the build on an HTTP error instead of writing the error page to
+# the output file silently. The size check is a second line of defense --
+# a truncated/corrupt download must fail the build loudly, never ship.
 RUN mkdir -p data/reference \
-    && curl -s -o data/reference/hg19.2bit \
-       https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.2bit
+    && curl -f --retry 3 --retry-delay 5 -o data/reference/hg19.2bit \
+       https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.2bit \
+    && actual_size=$(stat -c%s data/reference/hg19.2bit) \
+    && echo "downloaded hg19.2bit: ${actual_size} bytes" \
+    && [ "$actual_size" -gt 800000000 ]
 
 # Code + the already-trained model artifacts (committed to the repo --
 # small, deterministic, see docs/phase3_uncertainty.md). The full data
