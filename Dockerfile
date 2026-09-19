@@ -13,12 +13,17 @@ RUN pip install --no-cache-dir -r requirements-serve.txt \
 # Reference genome for SBS-96 trinucleotide context lookups at inference
 # time (see docs/phase1_features.md). Fetched at build time so `docker run`
 # needs no network access and no pre-populated host data/ directory.
-# -f: fail the build on an HTTP error instead of writing the error page to
-# the output file silently. The size check is a second line of defense --
-# a truncated/corrupt download must fail the build loudly, never ship.
+# Mirrored as a GitHub release asset on this repo rather than fetched from
+# UCSC directly: UCSC's server returned a 257-byte stub instead of the real
+# file on Render's build network (likely blocking/rate-limiting some cloud
+# IP ranges), while GitHub's release CDN (Azure Blob-backed) works reliably.
+# -f -L: fail on HTTP errors, follow the redirect to the actual blob URL.
+# The size check is a second line of defense -- a truncated/corrupt
+# download must fail the build loudly, never ship (this is exactly how the
+# UCSC failure was caught instead of shipping a broken image).
 RUN mkdir -p data/reference \
-    && curl -f --retry 3 --retry-delay 5 -o data/reference/hg19.2bit \
-       https://hgdownload.soe.ucsc.edu/goldenPath/hg19/bigZips/hg19.2bit \
+    && curl -f -L --retry 3 --retry-delay 5 -o data/reference/hg19.2bit \
+       https://github.com/mimjamam/SHIFT_ABSTAIN_tumor_origin_classification/releases/download/reference-data/hg19.2bit \
     && actual_size=$(stat -c%s data/reference/hg19.2bit) \
     && echo "downloaded hg19.2bit: ${actual_size} bytes" \
     && [ "$actual_size" -gt 800000000 ]
